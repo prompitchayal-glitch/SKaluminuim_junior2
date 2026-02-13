@@ -274,12 +274,33 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>ต้นทุนรวม</label>
-                        <input type="number" id="projectTotalCost" readonly>
+                        <input type="number" id="projectCost" placeholder="0">
                     </div>
                     <div class="form-group">
                         <label>ราคาขาย</label>
-                        <input type="number" id="projectTotalPrice" required>
+                        <input type="number" id="projectSellingPrice" required>
                     </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>สถานะโครงการ</label>
+                        <select id="projectStatus">
+                            <option value="planning">วางแผน</option>
+                            <option value="in-progress">กำลังดำเนินการ</option>
+                            <option value="completed">เสร็จสิ้น</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>สถานะการชำระเงิน</label>
+                        <select id="projectPaymentStatus">
+                            <option value="UNPAID">ค้างชำระ</option>
+                            <option value="PAID">ชำระแล้ว</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>รายละเอียด</label>
+                    <textarea id="projectDescription" rows="3"></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" id="cancelAddProject">ยกเลิก</button>
@@ -289,6 +310,9 @@
         </div>
     </div>
     
+    <script src="js/api.js"></script>
+    <script src="js/utils/export.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/pages/projects.js"></script>
 </body>
 </html>

@@ -80,13 +80,18 @@
                 
                 <!-- Customer Info -->
                 <div class="customer-section">
+                    <div class="customer-select-section" style="margin-bottom: 15px;">
+                        <select id="selectCustomer" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; min-width: 200px;">
+                            <option value="">เลือกลูกค้า</option>
+                        </select>
+                    </div>
                     <div class="customer-info">
-                        <h3>ชื่อลูกค้า: <span id="customerName">นายภูมิพัฒน์ หลอดจี</span></h3>
-                        <p>ที่อยู่: <span id="customerAddress">KU SRC University</span></p>
-                        <p>เบอร์โทร: <span id="customerPhone">099-999-9999</span></p>
+                        <h3>ชื่อลูกค้า: <span id="customerName"></span></h3>
+                        <p>ที่อยู่: <span id="customerAddress"></span></p>
+                        <p>เบอร์โทร: <span id="customerPhone"></span></p>
                     </div>
                     <div class="quotation-info">
-                        <p>เลขที่เอกสาร <span id="quotationNumber">001</span></p>
+                        <p>เลขที่เอกสาร <span id="quotationNumber">QT-001</span></p>
                         <p>วันที่ <span id="quotationDate">15 ธ.ค. 2568</span></p>
                     </div>
                 </div>
@@ -203,6 +208,12 @@
             <h2>เพิ่มรายการสินค้า/บริการ</h2>
             <form id="addItemForm">
                 <div class="form-group">
+                    <label>เลือกจากคลังวัสดุ (ไม่บังคับ)</label>
+                    <select id="selectMaterial">
+                        <option value="">เลือกวัสดุ</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>รายการ</label>
                     <input type="text" id="itemName" required>
                 </div>
@@ -228,6 +239,9 @@
         </div>
     </div>
     
+    <script src="js/api.js"></script>
+    <script src="js/utils/export.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/pages/quotation.js"></script>
 </body>
 </html>

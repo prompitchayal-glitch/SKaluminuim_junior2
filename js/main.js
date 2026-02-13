@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== Login Page Logic =====
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
@@ -615,23 +615,32 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = document.getElementById('role').value;
             
             if (email && password && role) {
-                // Store user info in sessionStorage
-                sessionStorage.setItem('user', JSON.stringify({
-                    email: email,
-                    role: role,
-                    name: email.split('@')[0]
-                }));
-                
-                // Show loading animation
                 const btn = loginForm.querySelector('button[type="submit"]');
                 const originalText = btn.textContent;
                 btn.textContent = 'กำลังเข้าสู่ระบบ...';
                 btn.disabled = true;
                 
-                // Redirect after short delay
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 800);
+                try {
+                    // Call API for login
+                    const response = await api.auth.login(email, password, role);
+                    
+                    if (response.success) {
+                        // Store user info in sessionStorage
+                        sessionStorage.setItem('user', JSON.stringify(response.user));
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        alert(response.message || 'เข้าสู่ระบบไม่สำเร็จ');
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
             } else {
                 alert('กรุณากรอกข้อมูลให้ครบถ้วน');
             }

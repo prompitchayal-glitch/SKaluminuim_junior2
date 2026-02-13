@@ -195,13 +195,17 @@
                 </div>
                 <div id="companyFields" style="display: none;">
                     <div class="form-group">
-                        <label>เลขประจำตัวผู้เสียภาษี</label>
-                        <input type="text" id="customerTaxId">
+                        <label>ชื่อบริษัท</label>
+                        <input type="text" id="companyName">
                     </div>
                     <div class="form-group">
-                        <label>ผู้ติดต่อ</label>
-                        <input type="text" id="customerContactPerson">
+                        <label>เลขประจำตัวผู้เสียภาษี</label>
+                        <input type="text" id="taxId">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>หมายเหตุ</label>
+                    <textarea id="customerNotes" rows="2"></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" id="cancelAddCustomer">ยกเลิก</button>
@@ -211,6 +215,9 @@
         </div>
     </div>
     
+    <script src="js/api.js"></script>
+    <script src="js/utils/export.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/pages/customers.js"></script>
 </body>
 </html>
