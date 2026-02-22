@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+            e.preventDefault(); // ปกติฟอร์ม HTML พอส่งข้อมูลเสร็จมันจะทำการ Reload หน้าใหม่ บรรทัดนี้สั่งให้มันอยู่เฉยๆ เพื่อให้ JavaScript จัดการเอง
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     // Call API for login
                     const response = await api.auth.login(email, password, role);
-                    
+                    // await จะบอกให้โปรแกรม "หยุดรอ" ที่บรรทัดนี้ก่อน จนกว่าจะได้คำตอบจาก Server จริงๆ ถึงจะเอาคำตอบนั้นไปเก็บไว้ในตัวแปร 
                     if (response.success) {
                         // Store user info in sessionStorage
                         sessionStorage.setItem('user', JSON.stringify(response.user));

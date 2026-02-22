@@ -40,8 +40,8 @@ router.get('/users', async (req, res) => {
 // Create user
 router.post('/users', async (req, res) => {
     try {
-        const user = new User(req.body);
-        await user.save();
+        const user = new User(req.body); // new User() = สร้าง document ใหม่ตาม schema
+        await user.save(); // บันทึกลง MongoDB
         res.status(201).json(user);
     } catch (error) {
         res.status(400).json({ message: error.message });
