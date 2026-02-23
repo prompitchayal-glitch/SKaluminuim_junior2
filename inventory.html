@@ -185,6 +185,21 @@
                     <label>จำนวน</label>
                     <input type="number" id="stockQuantity" required>
                 </div>
+                <div class="form-group" id="stockProjectGroup" style="display: none;">
+                    <label>ใช้กับโปรเจกต์</label>
+                    <select id="stockProject">
+                        <option value="">เลือกโปรเจกต์</option>
+                    </select>
+                    
+                </div>
+                <!--ตอนกดปุ่ม รับวัสดุเข้า (in)
+
+                openStockModal(id, 'in') จะสั่งให้
+                ซ่อนกล่อง stockProjectGroup (display: none)
+                เคลียร์ตัวเลือกโปรเจกต์ทิ้ง
+                และ div นั้นกำหนดค่าเริ่มต้นใน HTML เป็น style="display: none;" อยู่แล้ว
+                ⇒ ผู้ใช้จะ ไม่เห็นช่องเลือกโปรเจกต์ เวลา “รับเข้า”-->
+                
                 <div class="form-group">
                     <label>หมายเหตุ</label>
                     <textarea id="stockNote" rows="3"></textarea>
