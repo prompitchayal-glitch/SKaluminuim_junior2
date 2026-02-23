@@ -102,12 +102,6 @@ function applyRBAC(user) {
 
 // ===== Dashboard Page =====
 if (document.querySelector('.hero-section')) {
-    // Update current date
-    const currentDateEl = document.getElementById('currentDate');
-    if (currentDateEl) {
-        currentDateEl.textContent = '2000-2026';
-    }
-    
     // Animate stat cards on scroll
     const statCards = document.querySelectorAll('.stat-card');
     const observerOptions = {
