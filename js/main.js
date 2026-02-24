@@ -646,16 +646,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearBtn = document.getElementById('clearAnnouncementBtn');
     const announcementText = document.getElementById('announcementText');
 
-    function renderAnnouncement(text) {
+    function renderAnnouncement(text, metadata = {}) {
         if (!announcementBanner || !announcementContent) return;
         if (text) {
             announcementContent.textContent = text;
+            
+            // Update timestamp
+            const dateElement = announcementBanner.querySelector('.announcement-date');
+            if (dateElement) {
+                const date = new Date(metadata.updatedAt || new Date());
+                dateElement.textContent = date.toLocaleString('th-TH', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
             announcementBanner.style.display = 'flex';
-            announcementBanner.style.justifyContent = 'space-between';
-            announcementBanner.style.alignItems = 'center';
-            announcementBanner.style.background = '#fff6d6';
-            announcementBanner.style.border = '1px solid #f0e1a8';
-            announcementBanner.style.padding = '10px 12px';
         } else {
             announcementBanner.style.display = 'none';
         }
@@ -667,7 +676,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('/api/announcement');
             const data = await response.json();
             if (data.announcement) {
-                renderAnnouncement(data.announcement);
+                renderAnnouncement(data.announcement, {
+                    updatedAt: data.updatedAt,
+                    createdBy: data.createdBy
+                });
                 if (announcementText) {
                     announcementText.value = data.announcement;
                 }
