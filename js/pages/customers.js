@@ -3,6 +3,7 @@ const CustomersPage = {
     customers: [],
     currentCustomerId: null,
     isEditMode: false,
+    isViewMode: false,
 
     // Initialize customers page
     async init() {
@@ -74,13 +75,13 @@ const CustomersPage = {
 
         document.querySelectorAll('#customersList .delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                this.deleteCustomer(e.target.dataset.id);
+                this.deleteCustomer(e.currentTarget.dataset.id);
             });
         });
 
         document.querySelectorAll('#customersList .view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                this.viewCustomer(e.target.dataset.id);
+                this.viewCustomer(e.currentTarget.dataset.id);
             });
         });
     },
@@ -149,8 +150,65 @@ const CustomersPage = {
 
     updateModalUI() {
         const modalTitle = document.querySelector('#addCustomerModal h2');
+        const cancelBtn = document.getElementById('cancelAddCustomer');
+        const saveBtn = document.querySelector('#addCustomerForm button[type="submit"]');
+
         if (modalTitle) {
-            modalTitle.textContent = this.isEditMode ? 'แก้ไขข้อมูลลูกค้า' : 'เพิ่มลูกค้าใหม่';
+            if (this.isViewMode) {
+                modalTitle.textContent = 'รายละเอียดลูกค้า';
+            } else {
+                modalTitle.textContent = this.isEditMode ? 'แก้ไขข้อมูลลูกค้า' : 'เพิ่มลูกค้าใหม่';
+            }
+        }
+
+        if (cancelBtn) {
+            cancelBtn.textContent = this.isViewMode ? 'ปิด' : 'ยกเลิก';
+        }
+
+        if (saveBtn) {
+            saveBtn.style.display = this.isViewMode ? 'none' : '';
+        }
+    },
+
+    setFormReadOnly(isReadOnly) {
+        const inputIds = [
+            'customerType',
+            'customerName',
+            'companyName',
+            'taxId',
+            'customerPhone',
+            'customerEmail',
+            'customerAddress',
+            'customerNotes'
+        ];
+
+        inputIds.forEach((id) => {
+            const element = document.getElementById(id);
+            if (!element) return;
+
+            if (element.tagName === 'SELECT') {
+                element.disabled = isReadOnly;
+            } else {
+                element.readOnly = isReadOnly;
+            }
+
+            element.classList.toggle('readonly-field', isReadOnly);
+        });
+    },
+
+    fillCustomerForm(customer) {
+        document.getElementById('customerType').value = customer.customerType || 'individual';
+        document.getElementById('customerName').value = customer.name || '';
+        document.getElementById('companyName').value = customer.companyName || '';
+        document.getElementById('taxId').value = customer.taxId || '';
+        document.getElementById('customerPhone').value = customer.phone || '';
+        document.getElementById('customerEmail').value = customer.email || '';
+        document.getElementById('customerAddress').value = customer.address || '';
+        document.getElementById('customerNotes').value = customer.notes || '';
+
+        const companyFields = document.getElementById('companyFields');
+        if (companyFields) {
+            companyFields.style.display = customer.customerType === 'company' ? 'block' : 'none';
         }
     },
 
@@ -165,13 +223,17 @@ const CustomersPage = {
     openAddModal() {
         this.currentCustomerId = null;
         this.isEditMode = false;
+        this.isViewMode = false;
         this.resetForm();
+        this.setFormReadOnly(false);
         this.updateModalUI();
         openModal('addCustomerModal');
     },
 
     // Save customer (create or update)
     async saveCustomer() {
+        if (this.isViewMode) return;
+
         const formData = {
             customerType: document.getElementById('customerType')?.value || 'individual',
             name: document.getElementById('customerName')?.value,
@@ -196,6 +258,8 @@ const CustomersPage = {
             this.resetForm();
             this.currentCustomerId = null;
             this.isEditMode = false;
+            this.isViewMode = false;
+            this.setFormReadOnly(false);
             this.updateModalUI();
             await this.loadCustomers();
         } catch (error) {
@@ -211,23 +275,10 @@ const CustomersPage = {
 
         this.currentCustomerId = id;
         this.isEditMode = true;
+        this.isViewMode = false;
+        this.setFormReadOnly(false);
         this.updateModalUI();
-
-        // Fill form with customer data
-        document.getElementById('customerType').value = customer.customerType || 'individual';
-        document.getElementById('customerName').value = customer.name || '';
-        document.getElementById('companyName').value = customer.companyName || '';
-        document.getElementById('taxId').value = customer.taxId || '';
-        document.getElementById('customerPhone').value = customer.phone || '';
-        document.getElementById('customerEmail').value = customer.email || '';
-        document.getElementById('customerAddress').value = customer.address || '';
-        document.getElementById('customerNotes').value = customer.notes || '';
-
-        // Show company fields if company type
-        const companyFields = document.getElementById('companyFields');
-        if (companyFields) {
-            companyFields.style.display = customer.customerType === 'company' ? 'block' : 'none';
-        }
+        this.fillCustomerForm(customer);
 
         openModal('addCustomerModal');
     },
@@ -251,18 +302,13 @@ const CustomersPage = {
         const customer = this.customers.find(c => c._id === id);
         if (!customer) return;
 
-        const details = [
-            `ชื่อ: ${customer.name}`,
-            `ประเภท: ${customer.customerType === 'company' ? 'นิติบุคคล' : 'บุคคลทั่วไป'}`,
-            customer.companyName ? `บริษัท: ${customer.companyName}` : '',
-            `โทร: ${customer.phone || '-'}`,
-            `อีเมล: ${customer.email || '-'}`,
-            `ที่อยู่: ${customer.address || '-'}`,
-            `โครงการทั้งหมด: ${customer.totalProjects || 0}`,
-            `ยอดใช้จ่าย: ฿${(customer.totalSpent || 0).toLocaleString('th-TH')}`
-        ].filter(Boolean).join('\n');
-
-        alert(`รายละเอียดลูกค้า:\n\n${details}`);
+        this.currentCustomerId = id;
+        this.isEditMode = false;
+        this.isViewMode = true;
+        this.fillCustomerForm(customer);
+        this.setFormReadOnly(true);
+        this.updateModalUI();
+        openModal('addCustomerModal');
     },
 
     // Filter customers
